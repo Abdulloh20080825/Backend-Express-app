@@ -1,18 +1,11 @@
 import express from "express";
 import { create } from "express-handlebars";
 import mongoose from "mongoose";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
 
-const PORT = process.env.PORT || 8080;
-
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const app = express();
 
@@ -26,17 +19,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 
-app.use("/auth", authRouter);
-app.use("/products", productsRouter);
+app.use(authRouter);
+app.use(productsRouter);
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Data Base is working");
+  })
+  .catch((e) => {
+    console.log(e);
+  });
+
+const PORT = 3000;
 
 app.listen(PORT, () => {
-  mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-      console.log("Data Base is working");
-    })
-    .catch((e) => {
-      console.log(e);
-    });
   console.log(`Server has been started on PORT: ${PORT}`);
 });
