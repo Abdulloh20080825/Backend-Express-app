@@ -1,12 +1,13 @@
 import { Router } from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import { generateJWTToken } from "../services/token.js";
 
 const router = Router();
 
 router.get("/login", (req, res) => {
   res.render("login", {
-    title: "Login",
+    title: "Login | Sammi",
     isLogin: true,
     loginError: req.flash("loginError"),
   });
@@ -14,7 +15,7 @@ router.get("/login", (req, res) => {
 
 router.get("/register", (req, res) => {
   res.render("register", {
-    title: "Register",
+    title: "Register | Sammi",
     isRegister: true,
     registerError: req.flash("registerError"),
   });
@@ -24,13 +25,13 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    req.flash("loginError", "All fiels is required");
+    req.flash("loginError", "All fields is required");
     res.redirect("/login");
     return;
   }
+
   const existUser = await User.findOne({ email });
   if (!existUser) {
-    console.log("User not found");
     req.flash("loginError", "User not found");
     res.redirect("/login");
     return;
@@ -43,28 +44,39 @@ router.post("/login", async (req, res) => {
     return;
   }
 
-  console.log(existUser);
+  const token = generateJWTToken(existUser._id);
+  res.cookie("token", token, { httpOnly: true, secure: true });
   res.redirect("/");
 });
 
 router.post("/register", async (req, res) => {
   const { firstname, lastname, email, password } = req.body;
+
   if (!firstname || !lastname || !email || !password) {
-    req.flash("registerError", "All fiels is required");
+    req.flash("registerError", "All fields is required");
     res.redirect("/register");
     return;
   }
 
-  const condidate = await User.findOne({ email });
+  const candidate = await User.findOne({ email });
 
-  if (condidate) {
-    req.flash("registerError", "Email is already taken");
+  if (candidate) {
+    req.flash("registerError", "User already exist");
     res.redirect("/register");
     return;
   }
+
   const hashedPassword = await bcrypt.hash(password, 10);
-  const userData = { firstname, lastname, email, password: hashedPassword };
+  const userData = {
+    firstName: firstname,
+    lastName: lastname,
+    email: email,
+    password: hashedPassword,
+  };
   const user = await User.create(userData);
+  const token = generateJWTToken(user._id);
+  res.cookie("token", token, { httpOnly: true, secure: true });
+  console.log(token);
   res.redirect("/");
 });
 
