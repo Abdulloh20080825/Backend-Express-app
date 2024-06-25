@@ -1,5 +1,11 @@
 <div class="w-75 mx-auto">
   <p class="fs-1">Login</p>
+  {{#if loginError}}
+    <div class="alert text-center alert-danger alert-dismissible" role="alert">
+      <strong>Error!</strong>
+      {{loginError}}
+    </div>
+  {{/if}}
   <form action="/login" method="post">
     <div class="form-floating mb-3">
       <input

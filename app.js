@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.js";
 import productsRouter from "./routes/products.js";
+import flash from "connect-flash";
+import session from "express-session";
 
 dotenv.config();
 
@@ -18,6 +20,10 @@ app.set("views", "./views");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
+app.use(
+  session({ secret: "Abdulloh", resave: false, saveUninitialized: false  })
+);
+app.use(flash());
 
 app.use(authRouter);
 app.use(productsRouter);
@@ -31,7 +37,7 @@ mongoose
     console.log(e);
   });
 
-const PORT = 3000;
+const PORT = 8080;
 
 app.listen(PORT, () => {
   console.log(`Server has been started on PORT: ${PORT}`);
