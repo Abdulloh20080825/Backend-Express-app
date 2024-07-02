@@ -10,6 +10,7 @@ router.get("/products", (req, res) => {
   res.render("products", {
     title: "Products",
     isProduct: true,
+
   });
 });
 router.get("/add", (req, res) => {

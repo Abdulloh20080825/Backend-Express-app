@@ -6,6 +6,10 @@ import { generateJWTToken } from "../services/token.js";
 const router = Router();
 
 router.get("/login", (req, res) => {
+  if (req.cookies.token) {
+    res.redirect("/");
+    return;
+  }
   res.render("login", {
     title: "Login | Sammi",
     isLogin: true,
@@ -13,7 +17,16 @@ router.get("/login", (req, res) => {
   });
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/");
+});
+
 router.get("/register", (req, res) => {
+  if (req.cookies.token) {
+    res.redirect("/");
+    return;
+  }
   res.render("register", {
     title: "Register | Sammi",
     isRegister: true,
