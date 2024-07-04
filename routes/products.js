@@ -6,11 +6,11 @@ import userMiddleware from "../middleware/user.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const products = await Product.find().lean()
-  console.log(products);
+  const products = await Product.find().lean();
   res.render("index", {
     title: "Boom Shop",
-    products: products
+    products: products.reverse(),
+    userId: req.userId ? req.userId.toString() : null,
   });
 });
 
