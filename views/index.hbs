@@ -8,7 +8,8 @@
             <p class="card-text fw-bold fs-5">
               {{title}}
             </p>
-            <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="m-0">{{formatDate createdAt}}</p>
               <small class="text-body-secondary fs-5">{{price}}.00$</small>
             </div>
           </div>
@@ -18,10 +19,11 @@
               role="group"
               aria-label="Basic example"
             >
-              <button
+              <a
                 type="button"
                 class="btn btn-outline-primary"
-              >Detail</button>
+                href="/product/{{_id}}"
+              > Detail</a>
               {{#if @root.token}}
                 {{#ifequal user @root.userId}}
                   <button

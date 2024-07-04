@@ -20,3 +20,12 @@
   padding: 0;
   margin: 0;
 }
+
+.product-image {
+  height: 80vh;
+  width: 100%;
+  background-color: #000;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
